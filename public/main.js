@@ -1,15 +1,18 @@
 const filters = [
     {
         name: 'ALL',
-        tasksAmount: 32
+        tasksAmount: 32,
+        checked: true
     },
     {
         name: 'OVERDUE',
-        tasksAmount: 1
+        tasksAmount: 1,
+        disabled: true
     },
     {
         name: 'TODAY',
-        tasksAmount: 2
+        tasksAmount: 2,
+        disabled: true
     },
     {
         name: 'FAVORITES',
@@ -33,15 +36,18 @@ const filters = [
  * Render filter markup
  * @param {string} name Filter name
  * @param {number} tasksAmount Amount of tasks
+ * @param {boolean} checked Checked state
+ * @param {boolean} disabled Disabled state
  */
-const renderFilter = (name, tasksAmount = 0) => {
+const renderFilter = (name, tasksAmount = 0, checked = false, disabled = false) => {
     const markup = `
         <input
             type="radio"
             id="filter__${name}"
             class="filter__input visually-hidden"
             name="filter"
-            checked
+            ${checked ? 'checked' : ''}
+            ${disabled ? 'disabled' : ''}
         />
         <label for="filter__${name}" class="filter__label">
             ${name.toUpperCase()} <span class="filter__${name}-count">${tasksAmount}</span>
@@ -53,7 +59,7 @@ const renderFilter = (name, tasksAmount = 0) => {
 
 const drawFilters = () => {
     filters.forEach(item => {
-        renderFilter(item.name, item.tasksAmount);
+        renderFilter(item.name, item.tasksAmount, item.checked, item.disabled);
     });
 };
 
