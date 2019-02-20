@@ -65,9 +65,9 @@ const drawFilters = () => {
 
 drawFilters();
 
-const getCardMarkup = (color = 'black', repeat, text = '', hashTags, deadline = false) => {
+const getCardMarkup = (color, repeat, text = '', hashTags, deadline = false) => {
     return `
-        <article class="card card--${color} ${repeat ? 'card--repeat' : ''} ${deadline ? 'card--deadline' : ''}">
+        <article class="card ${color ? 'card--' + color : ''} ${repeat ? 'card--repeat' : ''} ${deadline ? 'card--deadline' : ''}">
             <form class="card__form" method="get">
                 <div class="card__inner">
                     <div class="card__control">
@@ -189,7 +189,7 @@ const getCardMarkup = (color = 'black', repeat, text = '', hashTags, deadline = 
 
                             <div class="card__hashtag">
                                 <div class="card__hashtag-list">
-                                    ${hashTags}
+                                    ${hashTags ? hashTags : ''}
                                 </div>
 
                                 <label>
@@ -284,7 +284,7 @@ const cardsAmount = 7;
 const colors = ['pink', 'yellow', 'blue'];
 const repeats = [true, false];
 const deadlines = [true, false];
-const texts = ['Sample text 1', 'Sample text 2', 'Sample text 3', 'Sample text 4', 'Sample text 5'];
+const texts = ['Train dog', 'Need to learn JS', 'Sleep well', 'Buy more synths', 'Lorem ipsum'];
 const hashTagsMock = ['#one', '#one #two', ''];
 
 for (let i = 0; i < cardsAmount; i++) {
