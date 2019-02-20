@@ -48,11 +48,19 @@ const getFilterMarkup = ({name, tasksAmount = 0, checked = false, disabled = fal
 `;
 const $filters = document.querySelector('.main__filter');
 
+const flushFliters = () => {
+    $filters.innerHTML = '';
+};
+
 const renderFilters = () => {
+    flushFliters();
+
     filters.forEach(item => {
         $filters.innerHTML += getFilterMarkup(item);
     });
 };
+
+
 
 const getCardMarkup = (color, modifier, text = '') => `
     <article class="card card--${color} ${modifier}">
