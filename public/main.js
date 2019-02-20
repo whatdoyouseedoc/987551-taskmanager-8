@@ -32,327 +32,338 @@ const filters = [
     }
 ];
 
-/**
- * Render filter markup
- * @param {string} name Filter name
- * @param {number} tasksAmount Amount of tasks
- * @param {boolean} checked Checked state
- * @param {boolean} disabled Disabled state
- */
-const renderFilter = (name, tasksAmount = 0, checked = false, disabled = false) => {
-    const markup = `
-        <input
-            type="radio"
-            id="filter__${name}"
-            class="filter__input visually-hidden"
-            name="filter"
-            ${checked ? 'checked' : ''}
-            ${disabled ? 'disabled' : ''}
-        />
-        <label for="filter__${name}" class="filter__label">
-            ${name.toUpperCase()} <span class="filter__${name}-count">${tasksAmount}</span>
-        </label>
-    `;
+const getFilterMarkup = ({name, tasksAmount = 0, checked = false, disabled = false}) => `
+    <input
+        type="radio"
+        id="filter__${name}"
+        class="filter__input visually-hidden"
+        name="filter"
+        ${checked ? 'checked' : ''}
+        ${disabled ? 'disabled' : ''}
+        onclick="changeFilter(${tasksAmount})"
+    />
+    <label for="filter__${name}" class="filter__label">
+        ${name.toUpperCase()} <span class="filter__${name}-count">${tasksAmount}</span>
+    </label>
+`;
+const $filters = document.querySelector('.main__filter');
 
-    document.querySelector('.main__filter').innerHTML += markup;
-};
-
-const drawFilters = () => {
+const renderFilters = () => {
     filters.forEach(item => {
-        renderFilter(item.name, item.tasksAmount, item.checked, item.disabled);
+        $filters.innerHTML += getFilterMarkup(item);
     });
 };
 
-drawFilters();
-
-const getCardMarkup = (color, modifier, text = '') => {
-    return `
-        <article class="card card--${color} ${modifier}">
-            <form class="card__form" method="get">
-            <div class="card__inner">
-                <div class="card__control">
-                <button type="button" class="card__btn card__btn--edit">
-                    edit
-                </button>
-                <button type="button" class="card__btn card__btn--archive">
-                    archive
-                </button>
-                <button
-                    type="button"
-                    class="card__btn card__btn--favorites card__btn--disabled"
+const getCardMarkup = (color, modifier, text = '') => `
+    <article class="card card--${color} ${modifier}">
+        <form class="card__form" method="get">
+        <div class="card__inner">
+            <div class="card__control">
+            <button type="button" class="card__btn card__btn--edit">
+                edit
+            </button>
+            <button type="button" class="card__btn card__btn--archive">
+                archive
+            </button>
+            <button
+                type="button"
+                class="card__btn card__btn--favorites card__btn--disabled"
+            >
+                favorites
+            </button>
+            </div>
+            <div class="card__color-bar">
+            <svg class="card__color-bar-wave" width="100%" height="10">
+                <use xlink:href="#wave"></use>
+            </svg>
+            </div>
+            <div class="card__textarea-wrap">
+            <label>
+                <textarea
+                class="card__text"
+                placeholder="Start typing your text here..."
+                name="text"
+                >${text}</textarea
                 >
-                    favorites
+            </label>
+            </div>
+            <div class="card__settings">
+            <div class="card__details">
+                <div class="card__dates">
+                <button class="card__date-deadline-toggle" type="button">
+                    date: <span class="card__date-status">no</span>
                 </button>
-                </div>
-                <div class="card__color-bar">
-                <svg class="card__color-bar-wave" width="100%" height="10">
-                    <use xlink:href="#wave"></use>
-                </svg>
-                </div>
-                <div class="card__textarea-wrap">
-                <label>
-                    <textarea
-                    class="card__text"
-                    placeholder="Start typing your text here..."
-                    name="text"
-                    >${text}</textarea
-                    >
-                </label>
-                </div>
-                <div class="card__settings">
-                <div class="card__details">
-                    <div class="card__dates">
-                    <button class="card__date-deadline-toggle" type="button">
-                        date: <span class="card__date-status">no</span>
-                    </button>
-                    <fieldset class="card__date-deadline" disabled>
-                        <label class="card__input-deadline-wrap">
-                        <input
-                            class="card__date"
-                            type="text"
-                            placeholder="23 September"
-                            name="date"
-                        />
-                        </label>
-                        <label class="card__input-deadline-wrap">
-                        <input
-                            class="card__time"
-                            type="text"
-                            placeholder="11:15 PM"
-                            name="time"
-                        />
-                        </label>
-                    </fieldset>
-                    <button class="card__repeat-toggle" type="button">
-                        repeat:<span class="card__repeat-status">no</span>
-                    </button>
-                    <fieldset class="card__repeat-days" disabled>
-                        <div class="card__repeat-days-inner">
-                        <input
-                            class="visually-hidden card__repeat-day-input"
-                            type="checkbox"
-                            id="repeat-mo-2"
-                            name="repeat"
-                            value="mo"
-                        />
-                        <label class="card__repeat-day" for="repeat-mo-2"
-                            >mo</label
-                        >
-                        <input
-                            class="visually-hidden card__repeat-day-input"
-                            type="checkbox"
-                            id="repeat-tu-2"
-                            name="repeat"
-                            value="tu"
-                            checked
-                        />
-                        <label class="card__repeat-day" for="repeat-tu-2"
-                            >tu</label
-                        >
-                        <input
-                            class="visually-hidden card__repeat-day-input"
-                            type="checkbox"
-                            id="repeat-we-2"
-                            name="repeat"
-                            value="we"
-                        />
-                        <label class="card__repeat-day" for="repeat-we-2"
-                            >we</label
-                        >
-                        <input
-                            class="visually-hidden card__repeat-day-input"
-                            type="checkbox"
-                            id="repeat-th-2"
-                            name="repeat"
-                            value="th"
-                        />
-                        <label class="card__repeat-day" for="repeat-th-2"
-                            >th</label
-                        >
-                        <input
-                            class="visually-hidden card__repeat-day-input"
-                            type="checkbox"
-                            id="repeat-fr-2"
-                            name="repeat"
-                            value="fr"
-                            checked
-                        />
-                        <label class="card__repeat-day" for="repeat-fr-2"
-                            >fr</label
-                        >
-                        <input
-                            class="visually-hidden card__repeat-day-input"
-                            type="checkbox"
-                            name="repeat"
-                            value="sa"
-                            id="repeat-sa-2"
-                        />
-                        <label class="card__repeat-day" for="repeat-sa-2"
-                            >sa</label
-                        >
-                        <input
-                            class="visually-hidden card__repeat-day-input"
-                            type="checkbox"
-                            id="repeat-su-2"
-                            name="repeat"
-                            value="su"
-                            checked
-                        />
-                        <label class="card__repeat-day" for="repeat-su-2"
-                            >su</label
-                        >
-                        </div>
-                    </fieldset>
-                    </div>
-                    <div class="card__hashtag">
-                    <div class="card__hashtag-list">
-                        <span class="card__hashtag-inner">
-                        <input
-                            type="hidden"
-                            name="hashtag"
-                            value="repeat"
-                            class="card__hashtag-hidden-input"
-                        />
-                        <button type="button" class="card__hashtag-name">
-                            #repeat
-                        </button>
-                        <button type="button" class="card__hashtag-delete">
-                            delete
-                        </button>
-                        </span>
-                        <span class="card__hashtag-inner">
-                        <input
-                            type="hidden"
-                            name="hashtag"
-                            value="repeat"
-                            class="card__hashtag-hidden-input"
-                        />
-                        <button type="button" class="card__hashtag-name">
-                            #cinema
-                        </button>
-                        <button type="button" class="card__hashtag-delete">
-                            delete
-                        </button>
-                        </span>
-                        <span class="card__hashtag-inner">
-                        <input
-                            type="hidden"
-                            name="hashtag"
-                            value="repeat"
-                            class="card__hashtag-hidden-input"
-                        />
-                        <button type="button" class="card__hashtag-name">
-                            #entertaiment
-                        </button>
-                        <button type="button" class="card__hashtag-delete">
-                            delete
-                        </button>
-                        </span>
-                    </div>
-                    <label>
-                        <input
+                <fieldset class="card__date-deadline" disabled>
+                    <label class="card__input-deadline-wrap">
+                    <input
+                        class="card__date"
                         type="text"
-                        class="card__hashtag-input"
-                        name="hashtag-input"
-                        placeholder="Type new hashtag here"
-                        />
+                        placeholder="23 September"
+                        name="date"
+                    />
                     </label>
-                    </div>
-                </div>
-                <label class="card__img-wrap card__img-wrap--empty">
+                    <label class="card__input-deadline-wrap">
                     <input
-                    type="file"
-                    class="card__img-input visually-hidden"
-                    name="img"
+                        class="card__time"
+                        type="text"
+                        placeholder="11:15 PM"
+                        name="time"
                     />
-                    <img
-                    src="img/add-photo.svg"
-                    alt="task picture"
-                    class="card__img"
-                    />
-                </label>
-                <div class="card__colors-inner">
-                    <h3 class="card__colors-title">Color</h3>
-                    <div class="card__colors-wrap">
+                    </label>
+                </fieldset>
+                <button class="card__repeat-toggle" type="button">
+                    repeat:<span class="card__repeat-status">no</span>
+                </button>
+                <fieldset class="card__repeat-days" disabled>
+                    <div class="card__repeat-days-inner">
                     <input
-                        type="radio"
-                        id="color-black-2"
-                        class="card__color-input card__color-input--black visually-hidden"
-                        name="color"
-                        value="black"
+                        class="visually-hidden card__repeat-day-input"
+                        type="checkbox"
+                        id="repeat-mo-2"
+                        name="repeat"
+                        value="mo"
                     />
-                    <label
-                        for="color-black-2"
-                        class="card__color card__color--black"
-                        >black</label
+                    <label class="card__repeat-day" for="repeat-mo-2"
+                        >mo</label
                     >
                     <input
-                        type="radio"
-                        id="color-yellow-2"
-                        class="card__color-input card__color-input--yellow visually-hidden"
-                        name="color"
-                        value="yellow"
-                    />
-                    <label
-                        for="color-yellow-2"
-                        class="card__color card__color--yellow"
-                        >yellow</label
-                    >
-                    <input
-                        type="radio"
-                        id="color-blue-2"
-                        class="card__color-input card__color-input--blue visually-hidden"
-                        name="color"
-                        value="blue"
-                    />
-                    <label
-                        for="color-blue-2"
-                        class="card__color card__color--blue"
-                        >blue</label
-                    >
-                    <input
-                        type="radio"
-                        id="color-green-2"
-                        class="card__color-input card__color-input--green visually-hidden"
-                        name="color"
-                        value="green"
-                    />
-                    <label
-                        for="color-green-2"
-                        class="card__color card__color--green"
-                        >green</label
-                    >
-                    <input
-                        type="radio"
-                        id="color-pink-2"
-                        class="card__color-input card__color-input--pink visually-hidden"
-                        name="color"
-                        value="pink"
+                        class="visually-hidden card__repeat-day-input"
+                        type="checkbox"
+                        id="repeat-tu-2"
+                        name="repeat"
+                        value="tu"
                         checked
                     />
-                    <label
-                        for="color-pink-2"
-                        class="card__color card__color--pink"
-                        >pink</label
+                    <label class="card__repeat-day" for="repeat-tu-2"
+                        >tu</label
+                    >
+                    <input
+                        class="visually-hidden card__repeat-day-input"
+                        type="checkbox"
+                        id="repeat-we-2"
+                        name="repeat"
+                        value="we"
+                    />
+                    <label class="card__repeat-day" for="repeat-we-2"
+                        >we</label
+                    >
+                    <input
+                        class="visually-hidden card__repeat-day-input"
+                        type="checkbox"
+                        id="repeat-th-2"
+                        name="repeat"
+                        value="th"
+                    />
+                    <label class="card__repeat-day" for="repeat-th-2"
+                        >th</label
+                    >
+                    <input
+                        class="visually-hidden card__repeat-day-input"
+                        type="checkbox"
+                        id="repeat-fr-2"
+                        name="repeat"
+                        value="fr"
+                        checked
+                    />
+                    <label class="card__repeat-day" for="repeat-fr-2"
+                        >fr</label
+                    >
+                    <input
+                        class="visually-hidden card__repeat-day-input"
+                        type="checkbox"
+                        name="repeat"
+                        value="sa"
+                        id="repeat-sa-2"
+                    />
+                    <label class="card__repeat-day" for="repeat-sa-2"
+                        >sa</label
+                    >
+                    <input
+                        class="visually-hidden card__repeat-day-input"
+                        type="checkbox"
+                        id="repeat-su-2"
+                        name="repeat"
+                        value="su"
+                        checked
+                    />
+                    <label class="card__repeat-day" for="repeat-su-2"
+                        >su</label
                     >
                     </div>
+                </fieldset>
                 </div>
+                <div class="card__hashtag">
+                <div class="card__hashtag-list">
+                    <span class="card__hashtag-inner">
+                    <input
+                        type="hidden"
+                        name="hashtag"
+                        value="repeat"
+                        class="card__hashtag-hidden-input"
+                    />
+                    <button type="button" class="card__hashtag-name">
+                        #repeat
+                    </button>
+                    <button type="button" class="card__hashtag-delete">
+                        delete
+                    </button>
+                    </span>
+                    <span class="card__hashtag-inner">
+                    <input
+                        type="hidden"
+                        name="hashtag"
+                        value="repeat"
+                        class="card__hashtag-hidden-input"
+                    />
+                    <button type="button" class="card__hashtag-name">
+                        #cinema
+                    </button>
+                    <button type="button" class="card__hashtag-delete">
+                        delete
+                    </button>
+                    </span>
+                    <span class="card__hashtag-inner">
+                    <input
+                        type="hidden"
+                        name="hashtag"
+                        value="repeat"
+                        class="card__hashtag-hidden-input"
+                    />
+                    <button type="button" class="card__hashtag-name">
+                        #entertaiment
+                    </button>
+                    <button type="button" class="card__hashtag-delete">
+                        delete
+                    </button>
+                    </span>
                 </div>
-                <div class="card__status-btns">
-                <button class="card__save" type="submit">save</button>
-                <button class="card__delete" type="button">delete</button>
+                <label>
+                    <input
+                    type="text"
+                    class="card__hashtag-input"
+                    name="hashtag-input"
+                    placeholder="Type new hashtag here"
+                    />
+                </label>
                 </div>
             </div>
-            </form>
-        </article>
-    `;
-};
+            <label class="card__img-wrap card__img-wrap--empty">
+                <input
+                type="file"
+                class="card__img-input visually-hidden"
+                name="img"
+                />
+                <img
+                src="img/add-photo.svg"
+                alt="task picture"
+                class="card__img"
+                />
+            </label>
+            <div class="card__colors-inner">
+                <h3 class="card__colors-title">Color</h3>
+                <div class="card__colors-wrap">
+                <input
+                    type="radio"
+                    id="color-black-2"
+                    class="card__color-input card__color-input--black visually-hidden"
+                    name="color"
+                    value="black"
+                />
+                <label
+                    for="color-black-2"
+                    class="card__color card__color--black"
+                    >black</label
+                >
+                <input
+                    type="radio"
+                    id="color-yellow-2"
+                    class="card__color-input card__color-input--yellow visually-hidden"
+                    name="color"
+                    value="yellow"
+                />
+                <label
+                    for="color-yellow-2"
+                    class="card__color card__color--yellow"
+                    >yellow</label
+                >
+                <input
+                    type="radio"
+                    id="color-blue-2"
+                    class="card__color-input card__color-input--blue visually-hidden"
+                    name="color"
+                    value="blue"
+                />
+                <label
+                    for="color-blue-2"
+                    class="card__color card__color--blue"
+                    >blue</label
+                >
+                <input
+                    type="radio"
+                    id="color-green-2"
+                    class="card__color-input card__color-input--green visually-hidden"
+                    name="color"
+                    value="green"
+                />
+                <label
+                    for="color-green-2"
+                    class="card__color card__color--green"
+                    >green</label
+                >
+                <input
+                    type="radio"
+                    id="color-pink-2"
+                    class="card__color-input card__color-input--pink visually-hidden"
+                    name="color"
+                    value="pink"
+                    checked
+                />
+                <label
+                    for="color-pink-2"
+                    class="card__color card__color--pink"
+                    >pink</label
+                >
+                </div>
+            </div>
+            </div>
+            <div class="card__status-btns">
+            <button class="card__save" type="submit">save</button>
+            <button class="card__delete" type="button">delete</button>
+            </div>
+        </div>
+        </form>
+    </article>
+`;
+
+const $cards = document.querySelector('.board__tasks');
 
 const renderCard = (markup) => {
-    document.querySelector('.board__tasks').innerHTML += markup;
+    $cards.innerHTML += markup;
 };
 
-const cards = [];
+const renderCards = cardsAmount => {
+    flushCards();
+
+    for (let i = 0; i < cardsAmount; i++) {
+        cards.push(getCardMarkup(
+            colors[getRandInt(0, 4)],
+            modifiers[getRandInt(0, 2)],
+            texts[getRandInt(0, 5)],
+            hashTagsMock[getRandInt(0, 2)]
+        ));
+    }
+    
+    cards.forEach(item => {
+        renderCard(item);
+    });
+};
+
+const flushCards = () => {
+    cards = [];
+    $cards.innerHTML = '';
+};
+
+let cards = [];
 const cardsAmount = 7;
 
 const colors = ['pink', 'yellow', 'blue', 'black'];
@@ -360,24 +371,16 @@ const modifiers = ['card--deadline', 'card--repeat', ''];
 const texts = ['Train dog', 'Need to learn JS', 'Sleep well', 'Buy more synths', 'Lorem ipsum', ''];
 const hashTagsMock = ['#one', '#one #two', ''];
 
-for (let i = 0; i < cardsAmount; i++) {
-    const color = colors[rand(0, 4)];
-    const modifier = modifiers[rand(0, 2)];
-    const text = texts[rand(0, 5)];
-    const hashTags = hashTagsMock[rand(0, 2)];
+/* Main */
+renderFilters();
 
-    cards.push(getCardMarkup(
-        color,
-        modifier,
-        text,
-        hashTags
-    ));
-}
+renderCards(7);
 
-cards.forEach(item => {
-    renderCard(item);
-});
+const changeFilter = amount => {
+    renderCards(amount);
+};
 
-function rand(min, max) {
+/* Utils */
+function getRandInt(min, max) {
     return Math.floor(min + Math.random() * (max + 1 - min));
 }
