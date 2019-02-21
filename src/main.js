@@ -1,68 +1,73 @@
+'use strict';
+
 const filters = [
-    {
-        name: 'ALL',
-        tasksAmount: 32,
-        checked: true
-    },
-    {
-        name: 'OVERDUE',
-        tasksAmount: 1,
-        disabled: true
-    },
-    {
-        name: 'TODAY',
-        tasksAmount: 2,
-        disabled: true
-    },
-    {
-        name: 'FAVORITES',
-        tasksAmount: 3
-    },
-    {
-        name: 'Repeating',
-        tasksAmount: 5
-    },
-    {
-        name: 'Tags',
-        tasksAmount: 8
-    },
-    {
-        name: 'ARCHIVE',
-        tasksAmount: 13
-    }
+  {
+    name: `ALL`,
+    tasksAmount: 32,
+    checked: true
+  },
+  {
+    name: `OVERDUE`,
+    tasksAmount: 1,
+    disabled: true
+  },
+  {
+    name: `TODAY`,
+    tasksAmount: 2,
+    disabled: true
+  },
+  {
+    name: `FAVORITES`,
+    tasksAmount: 3
+  },
+  {
+    name: `Repeating`,
+    tasksAmount: 5
+  },
+  {
+    name: `Tags`,
+    tasksAmount: 8
+  },
+  {
+    name: `ARCHIVE`,
+    tasksAmount: 13
+  }
 ];
 
-const getFilterMarkup = ({name, tasksAmount = 0, checked = false, disabled = false}) => `
+const getFilterMarkup = ({
+  name,
+  tasksAmount = 0,
+  checked = false,
+  disabled = false
+}) => `
     <input
         type="radio"
         id="filter__${name}"
         class="filter__input visually-hidden"
         name="filter"
-        ${checked ? 'checked' : ''}
-        ${disabled ? 'disabled' : ''}
-        onclick="changeFilter(${tasksAmount})"
+        ${checked ? `checked` : ``}
+        ${disabled ? `disabled` : ``}
+        onclick="renderCards(${tasksAmount})"
     />
     <label for="filter__${name}" class="filter__label">
         ${name.toUpperCase()} <span class="filter__${name}-count">${tasksAmount}</span>
     </label>
 `;
-const $filters = document.querySelector('.main__filter');
+const $filters = document.querySelector(`.main__filter`);
 
 const flushFliters = () => {
-    $filters.innerHTML = '';
+  $filters.innerHTML = ``;
 };
 
 const renderFilters = () => {
-    flushFliters();
+  flushFliters();
 
-    filters.forEach(item => {
-        $filters.innerHTML += getFilterMarkup(item);
-    });
+  filters.forEach((item) => {
+    $filters.innerHTML += getFilterMarkup(item);
+  });
 };
 
-
-
-const getCardMarkup = (color, modifier, text = '') => `
+const getCardMarkup = (color, modifier, text = ``) => `
     <article class="card card--${color} ${modifier}">
         <form class="card__form" method="get">
         <div class="card__inner">
@@ -343,47 +348,40 @@ const getCardMarkup = (color, modifier, text = '') => `
     </article>
 `;
 
-const $cards = document.querySelector('.board__tasks');
+const $cards = document.querySelector(`.board__tasks`);
 
-/** Render one card */
 const renderCard = (markup) => {
-    $cards.innerHTML += markup;
+  $cards.innerHTML += markup;
 };
 
-/** Render all cards */
-const renderCards = amount => {
-    flushCards();
+const renderCards = (amount) => {
+  flushCards();
 
-    for (let i = 0; i < amount; i++) {
-        cards.push(getCardMarkup(
-            colors[getRandInt(0, 4)],
-            modifiers[getRandInt(0, 2)],
-            texts[getRandInt(0, 5)],
-            hashTagsMock[getRandInt(0, 2)]
-        ));
-    }
-    
-    cards.forEach(item => {
-        renderCard(item);
-    });
+  while (cards.length < amount) {
+    cards.push(getCardMarkup(
+        colors[getRandInt(0, 4)],
+        modifiers[getRandInt(0, 2)],
+        texts[getRandInt(0, 5)],
+        hashTagsMock[getRandInt(0, 2)]
+    ));
+  }
+
+  cards.forEach((item) => {
+    renderCard(item);
+  });
 };
 
 const flushCards = () => {
-    cards = [];
-    $cards.innerHTML = '';
+  cards = [];
+  $cards.innerHTML = ``;
 };
 
 let cards = [];
 
-const colors = ['pink', 'yellow', 'blue', 'black'];
-const modifiers = ['card--deadline', 'card--repeat', ''];
-const texts = ['Train dog', 'Need to learn JS', 'Sleep well', 'Buy more synths', 'Lorem ipsum', ''];
-const hashTagsMock = ['#one', '#one #two', ''];
-
-/* Filter change handler */
-const changeFilter = amount => {
-    renderCards(amount);
-};
+const colors = [`pink`, `yellow`, `blue`, `black`];
+const modifiers = [`card--deadline`, `card--repeat`, ``];
+const texts = [`Train dog`, `Need to learn JS`, `Sleep well`, `Buy more synths`, `Lorem ipsum`, ``];
+const hashTagsMock = [`#one`, `#one #two`, ``];
 
 /* Main */
 renderFilters();
@@ -391,5 +389,5 @@ renderCards(7);
 
 /* Utils */
 function getRandInt(min, max) {
-    return Math.floor(min + Math.random() * (max + 1 - min));
+  return Math.floor(min + Math.random() * (max + 1 - min));
 }
