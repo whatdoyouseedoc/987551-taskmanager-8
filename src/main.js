@@ -1,38 +1,5 @@
-'use strict';
-
-const filters = [
-  {
-    name: `ALL`,
-    tasksAmount: 32,
-    checked: true
-  },
-  {
-    name: `OVERDUE`,
-    tasksAmount: 1,
-    disabled: true
-  },
-  {
-    name: `TODAY`,
-    tasksAmount: 2,
-    disabled: true
-  },
-  {
-    name: `FAVORITES`,
-    tasksAmount: 3
-  },
-  {
-    name: `Repeating`,
-    tasksAmount: 5
-  },
-  {
-    name: `Tags`,
-    tasksAmount: 8
-  },
-  {
-    name: `ARCHIVE`,
-    tasksAmount: 13
-  }
-];
+import {filters} from './filters';
+import {colors, modifiers, texts, hashTagsMock} from './card-props';
 
 const getFilterMarkup = ({
   name,
@@ -359,10 +326,10 @@ const renderCards = (amount) => {
 
   while (cards.length < amount) {
     cards.push(getCardMarkup(
-        colors[getRandInt(0, 4)],
-        modifiers[getRandInt(0, 2)],
-        texts[getRandInt(0, 5)],
-        hashTagsMock[getRandInt(0, 2)]
+      colors[getRandInt(0, 4)],
+      modifiers[getRandInt(0, 2)],
+      texts[getRandInt(0, 5)],
+      hashTagsMock[getRandInt(0, 2)]
     ));
   }
 
@@ -377,11 +344,6 @@ const flushCards = () => {
 };
 
 let cards = [];
-
-const colors = [`pink`, `yellow`, `blue`, `black`];
-const modifiers = [`card--deadline`, `card--repeat`, ``];
-const texts = [`Train dog`, `Need to learn JS`, `Sleep well`, `Buy more synths`, `Lorem ipsum`, ``];
-const hashTagsMock = [`#one`, `#one #two`, ``];
 
 /* Main */
 renderFilters();
