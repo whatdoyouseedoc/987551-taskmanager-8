@@ -8,7 +8,7 @@ const $cards = document.querySelector(`.board__tasks`);
 renderFilters($filters);
 renderCards($cards, 7);
 
-$filters.addEventListener('change', ($event) => {
-  const count = $event.target.attributes['data-count'].value;
+$filters.addEventListener(`change`, ($event) => {
+  const count = $event.target.attributes[`data-count`].value;
   renderCards($cards, count);
 });

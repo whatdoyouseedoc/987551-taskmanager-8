@@ -19,12 +19,12 @@ const renderCards = (selector, amount) => {
 
   for (let i = 0; i < amount; i++) {
     renderCard(selector, cardMarkup(
-      colors[getRandInt(0, 4)],
-      modifiers[getRandInt(0, 2)],
-      texts[getRandInt(0, 5)],
-      hashTagsMock[getRandInt(0, 2)]
+        colors[getRandInt(0, 4)],
+        modifiers[getRandInt(0, 2)],
+        texts[getRandInt(0, 5)],
+        hashTagsMock[getRandInt(0, 2)]
     ));
   }
-}
+};
 
-export { renderCards };
+export {renderCards};
